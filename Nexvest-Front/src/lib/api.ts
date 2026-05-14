@@ -17,9 +17,20 @@ export interface QueryParams {
  * Construye una URL absoluta a partir del path y los parametros. Para
  * arreglos se repite la clave (ej: tickers=VOO&tickers=IVV), formato
  * que entiende FastAPI con Query(List[str]).
+ *
+ * Soporta dos formatos de VITE_API_URL:
+ *   - absoluto:  "http://localhost:8000"  (dev)
+ *   - relativo:  "/api"                   (produccion, mismo origen)
+ * Cuando es relativo, se resuelve contra window.location.origin para
+ * que `new URL(...)` no falle.
  */
 function construirUrl(path: string, params?: QueryParams): string {
-  const url = new URL(`${API_URL}${path}`);
+  const combinado = `${API_URL}${path}`;
+  const base =
+    typeof window !== "undefined" ? window.location.origin : undefined;
+  const url = /^https?:\/\//.test(combinado)
+    ? new URL(combinado)
+    : new URL(combinado, base);
   if (!params) return url.toString();
 
   for (const clave of Object.keys(params)) {

@@ -17,7 +17,12 @@ export interface ParametrosReporte {
 }
 
 function construirQuery(params: ParametrosReporte): string {
-  const url = new URL(`${API_URL}/analisis/reporte/pdf`);
+  const combinado = `${API_URL}/analisis/reporte/pdf`;
+  const base =
+    typeof window !== "undefined" ? window.location.origin : undefined;
+  const url = /^https?:\/\//.test(combinado)
+    ? new URL(combinado)
+    : new URL(combinado, base);
   if (params.tickers) {
     for (const t of params.tickers) url.searchParams.append("tickers", t);
   }
