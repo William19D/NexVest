@@ -24,7 +24,7 @@ RUN apt-get update \
 # Supercronic = "cron friendly con contenedores".
 # Lee un crontab y ejecuta los comandos como proceso hijo.
 ARG SUPERCRONIC_VERSION=v0.2.30
-ARG SUPERCRONIC_SHA1SUM=9aeb41e00cc7b71d30d33c57a2333f2c2581a201
+ARG SUPERCRONIC_SHA1SUM=9f27ad28c5c57cd133325b2a66bba69ba2235799
 RUN curl -fsSLO \
         "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-amd64" \
     && echo "${SUPERCRONIC_SHA1SUM}  supercronic-linux-amd64" | sha1sum -c - \
