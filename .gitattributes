@@ -1,0 +1,21 @@
+# Default: normalize line endings to LF on commit.
+* text=auto eol=lf
+
+# Files that MUST always be LF (run on Linux containers/servers).
+*.sh           text eol=lf
+*.service      text eol=lf
+*.timer        text eol=lf
+Dockerfile*    text eol=lf
+Caddyfile      text eol=lf
+crontab        text eol=lf
+docker-compose.yml text eol=lf
+
+# Binary assets (do not touch).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.ico binary
+*.woff binary
+*.woff2 binary

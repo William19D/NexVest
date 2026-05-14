@@ -1,0 +1,9 @@
+# Crontab consumido por supercronic dentro del contenedor etl-cron.
+# Formato estandar de cron:  m  h  dom  mes  dow  comando
+#
+# Hora del contenedor: UTC.
+# BVC cierra a las 15:00 hora Colombia = 20:00 UTC.
+# Corremos a las 22:00 UTC (= 17:00 Colombia), dos horas despues del
+# cierre para asegurar que la API publique cierres definitivos.
+# Lunes a Viernes (la bolsa no opera sabados ni domingos).
+0 22 * * 1-5 cd /app && python -m etl.scheduled

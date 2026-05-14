@@ -1,0 +1,30 @@
+[Unit]
+Description=NexVest FastAPI backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nexvest
+Group=nexvest
+WorkingDirectory=/opt/nexvest/Nexvest-Back-FASTAPI
+EnvironmentFile=/opt/nexvest/Nexvest-Back-FASTAPI/.env
+ExecStart=/opt/nexvest/.venv/bin/uvicorn main:app \
+    --host 127.0.0.1 \
+    --port 8000 \
+    --workers 2 \
+    --proxy-headers \
+    --forwarded-allow-ips=127.0.0.1
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Endurecimiento basico.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

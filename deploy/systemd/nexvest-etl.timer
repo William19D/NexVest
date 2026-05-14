@@ -1,0 +1,14 @@
+[Unit]
+Description=Disparador diario del ETL de NexVest
+
+[Timer]
+# La BVC cierra a las 15:00 hora Colombia (UTC-5).
+# Corremos a las 22:00 UTC (= 17:00 Colombia), con dos horas de margen
+# para que la API publique los cierres definitivos.
+# Lunes a viernes (la bolsa no opera sabados ni domingos).
+OnCalendar=Mon..Fri 22:00:00
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target

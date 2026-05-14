@@ -1,0 +1,84 @@
+# NexVest - docker-compose
+# ------------------------
+# Tres servicios:
+#   - api      : FastAPI (uvicorn). Solo expuesta dentro de la red interna.
+#   - etl-cron : misma imagen del api, ejecuta supercronic con el crontab.
+#   - web      : Caddy. Sirve la SPA estatica + reverse proxy a la api.
+#                Unico servicio con puertos publicos (80 y 443).
+#
+# Volumenes:
+#   caddy_data, caddy_config : persisten los certificados Let's Encrypt
+#                              entre reinicios.
+#
+# Archivos requeridos en el host:
+#   ./.env                                       (DOMAIN=...)
+#   ./Nexvest-Back-FASTAPI/.env                  (MONGO_URI, MONGO_DB_NAME)
+
+services:
+
+  api:
+    build:
+      context: ./Nexvest-Back-FASTAPI
+      dockerfile: Dockerfile
+    image: nexvest-api:latest
+    container_name: nexvest-api
+    restart: unless-stopped
+    env_file:
+      - ./Nexvest-Back-FASTAPI/.env
+    expose:
+      - "8000"
+    networks:
+      - nexvest
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/', timeout=5).status==200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  etl-cron:
+    image: nexvest-api:latest
+    container_name: nexvest-etl-cron
+    restart: unless-stopped
+    depends_on:
+      - api
+    env_file:
+      - ./Nexvest-Back-FASTAPI/.env
+    command: ["supercronic", "/etc/cron/crontab"]
+    volumes:
+      - ./deploy/crontab:/etc/cron/crontab:ro
+    networks:
+      - nexvest
+
+  web:
+    build:
+      context: ./Nexvest-Front
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    image: nexvest-web:latest
+    container_name: nexvest-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    env_file:
+      - ./.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - caddy_logs:/var/log/caddy
+    networks:
+      - nexvest
+
+networks:
+  nexvest:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
+  caddy_logs:

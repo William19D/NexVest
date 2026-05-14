@@ -1,0 +1,23 @@
+[Unit]
+Description=NexVest ETL diario (descarga incremental BVC + Yahoo)
+After=network-online.target nexvest-api.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=nexvest
+Group=nexvest
+WorkingDirectory=/opt/nexvest/Nexvest-Back-FASTAPI
+EnvironmentFile=/opt/nexvest/Nexvest-Back-FASTAPI/.env
+ExecStart=/opt/nexvest/.venv/bin/python -m etl.scheduled
+StandardOutput=journal
+StandardError=journal
+
+# Endurecimiento.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+# El job puede tardar varios minutos cuando hay backlog (cold start).
+TimeoutStartSec=30min

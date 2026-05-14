@@ -1,0 +1,30 @@
+# NexVest - Caddyfile (Docker)
+# -----------------------------
+# Se monta en el contenedor 'web' (basado en caddy:2-alpine).
+# El nombre del dominio viene de la variable de entorno DOMAIN (definida
+# en el .env del compose).
+
+{$DOMAIN} {
+    encode zstd gzip
+
+    log {
+        output file /var/log/caddy/nexvest.log
+        format console
+    }
+
+    # ---------- API: /api/* -> backend FastAPI ----------
+    handle_path /api/* {
+        reverse_proxy api:8000 {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # ---------- Frontend estatico (SPA) ----------
+    handle {
+        root * /var/www/nexvest
+        try_files {path} /index.html
+        file_server
+    }
+}

@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 20% 90%;
+
+    --card: 220 40% 8%;
+    --card-foreground: 210 20% 90%;
+
+    --popover: 220 40% 8%;
+    --popover-foreground: 210 20% 90%;
+
+    --primary: 166 100% 42%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 220 30% 14%;
+    --secondary-foreground: 210 20% 85%;
+
+    --muted: 220 25% 12%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 38 92% 50%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 20% 16%;
+    --input: 220 20% 16%;
+    --ring: 166 100% 42%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 210 15% 65%;
+    --sidebar-primary: 166 100% 42%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 220 30% 12%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 220 20% 12%;
+    --sidebar-ring: 166 100% 42%;
+
+    /* Custom tokens */
+    --teal: 166 100% 42%;
+    --amber: 38 92% 50%;
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+    --danger: 0 72% 51%;
+    --chart-1: 166 100% 42%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 270 60% 60%;
+    --chart-4: 200 80% 55%;
+    --chart-5: 340 65% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, hsl(220 20% 12% / 0.5) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(220 20% 12% / 0.5) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .glow-border {
+    box-shadow: 0 0 0 1px hsl(var(--teal) / 0.3), 0 0 15px -3px hsl(var(--teal) / 0.15);
+  }
+
+  .glow-border-amber {
+    box-shadow: 0 0 0 1px hsl(var(--amber) / 0.3), 0 0 15px -3px hsl(var(--amber) / 0.15);
+  }
+
+  .text-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+}
